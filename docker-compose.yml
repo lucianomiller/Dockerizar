@@ -1,0 +1,48 @@
+version: '3.8'
+services:
+  php:
+    build:
+      context: .
+      dockerfile: Dockerfile-php
+    volumes:
+      - ./bootcamp-devops-2023/app-295devops-travel:/var/www/html
+    ports:
+      - 80:80
+    networks:
+      - red1
+    depends_on:
+      - db
+
+  db:
+    image: mysql:latest
+    environment:
+      - MYSQL_ROOT_PASSWORD=codepass
+      - MYSQL_DATABASE=devopstravel
+      - MYSQL_USER=codeuser
+      - MYSQL_PASSWORD=codepass
+    volumes:
+      - ./bootcamp-devops-2023/app-295devops-travel/database:/docker-entrypoint-initdb.d
+      - persistent:/var/lib/mysql
+    networks:
+      - red1
+      - red2
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    ports:
+      - 8080:80
+    environment:
+      - PMA_HOST=db
+      - PMA_USER=codeuser
+      - PMA_PASSWORD=codepass
+    depends_on:
+      - db
+    networks:
+      - red2
+
+networks:
+  red1:
+  red2:
+
+volumes:
+  persistent:
