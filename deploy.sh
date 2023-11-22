@@ -36,7 +36,7 @@ else
     apt install -y git
 fi
 
-git clone https://github.com/roxsross/bootcamp-devops-2023.git --single-branch --branch clase2-linux-bash
+git clone https://github.com/roxsross/bootcamp-devops-2023.git --single-branch --branch clase3-docker
 
 sed -i "s/\$dbPassword = \"\";/\$dbPassword = \"codepass\";/" "bootcamp-devops-2023/app-295devops-travel/config.php"
 

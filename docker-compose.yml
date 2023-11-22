@@ -1,44 +1,69 @@
 version: '3.1'
 services:
-  php:
-    build:
-      context: .
-      dockerfile: Dockerfile-php
-    volumes:
-      - ./bootcamp-devops-2023/app-295devops-travel:/var/www/html
-    ports:
-      - 80:80
-    networks:
-      - red1
-    depends_on:
-      - db
+  # php:
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile-php
+  #   volumes:
+  #     - ./bootcamp-devops-2023/app-295devops-travel:/var/www/html
+  #   ports:
+  #     - 80:80
+  #   networks:
+  #     - red1
+  #   depends_on:
+  #     - db
+
+  
 
   db:
-    image: mysql:latest
+    image: postgres:latest
+    container_name: db
     environment:
-      - MYSQL_ROOT_PASSWORD=codepass
-      - MYSQL_DATABASE=devopstravel
-      - MYSQL_USER=codeuser
-      - MYSQL_PASSWORD=codepass
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=postgres
     volumes:
-      - ./bootcamp-devops-2023/app-295devops-travel/database:/docker-entrypoint-initdb.d
-      - persistent:/var/lib/mysql
+      - ./bootcamp-devops-2023/295words-docker/db:/docker-entrypoint-initdb.d
+      - persistent:/var/lib/postgresql/data
     networks:
       - red1
       - red2
 
-  phpmyadmin:
-    image: phpmyadmin/phpmyadmin
+  pgadmin:
+      image: dpage/pgadmin4
+      container_name: pgadmin
+      ports:
+        - 5050:80
+      environment:
+        - PGADMIN_DEFAULT_EMAIL=admin@example.com
+        - PGADMIN_DEFAULT_PASSWORD=admin123
+      depends_on:
+        - db
+      networks:
+        - red2
+
+  java:
+    build:
+      context: ./bootcamp-devops-2023/295words-docker/api
+      dockerfile: Dockerfile
+    container_name: java
     ports:
-      - 8080:80
-    environment:
-      - PMA_HOST=db
-      - PMA_USER=codeuser
-      - PMA_PASSWORD=codepass
-    depends_on:
-      - db
+      - 8080:8080
     networks:
-      - red2
+      - red1
+
+  # phpmyadmin:
+  #   image: phpmyadmin/phpmyadmin
+  #   ports:
+  #     - 8080:80
+  #   environment:
+  #     - PMA_HOST=db
+  #     - PMA_USER=codeuser
+  #     - PMA_PASSWORD=codepass
+  #   depends_on:
+  #     - db
+  #   networks:
+  #     - red2
 
 networks:
   red1:
