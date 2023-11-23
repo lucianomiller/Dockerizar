@@ -18,7 +18,7 @@ Esta aplicación consta de tres componentes principales:
 
 - Base de Datos MongoDB: La base de datos se iniciará a través de un contenedor de MongoDB. Además, deberás proporcionar un archivo mongo-init.js que cargue datos iniciales en la base de datos cuando se inicie el contenedor de MongoDB.
 
-![](../assets/295topics/docker-compose.png)
+![](./assets/295topics/docker-compose.png)
 
 ## Requisitos:
 
@@ -76,7 +76,7 @@ Es importante el uso de las variables de entorno
 
 ### Base de Datos MongoDB:
 
-Se entrega archivo mongo-init.js en la [ruta](../295topics-fullstack/db/mongo-init.js)  que sirve para  precargar datos a la base de datos MongoDB.
+Se entrega archivo mongo-init.js en la [ruta](./295topics-fullstack/db/mongo-init.js)  que sirve para  precargar datos a la base de datos MongoDB.
 se debe Configura un contenedor Docker para ejecutar una instancia de MongoDB.
 Utiliza el archivo mongo-init.js para precargar datos en la base de datos.
 
@@ -132,13 +132,13 @@ Este desafío proporciona una experiencia práctica en DevOps, cubriendo desde l
 
 ### Resultados
 
-![](../assets/295topics/1.png)
-![](../assets/295topics/2.png)
-![](../assets/295topics/3.png)
-![](../assets/295topics/4.png)
-![](../assets/295topics/5.png)
-![](../assets/295topics/6.png)
-![](../assets/295topics/7.png)
+![](./assets/295topics/1.png)
+![](./assets/295topics/2.png)
+![](./assets/295topics/3.png)
+![](./assets/295topics/4.png)
+![](./assets/295topics/5.png)
+![](./assets/295topics/6.png)
+![](./assets/295topics/7.png)
 
 ---
 
