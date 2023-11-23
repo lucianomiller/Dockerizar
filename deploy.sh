@@ -36,11 +36,69 @@ else
     apt install -y git
 fi
 
-git clone https://github.com/roxsross/bootcamp-devops-2023.git --single-branch --branch clase2-linux-bash
+git clone https://github.com/roxsross/bootcamp-devops-2023.git --single-branch --branch ejercicio2-dockeriza
 
-sed -i "s/\$dbPassword = \"\";/\$dbPassword = \"codepass\";/" "bootcamp-devops-2023/app-295devops-travel/config.php"
+# Ruta del directorio donde se creará el Dockerfile
+backDirectory="./bootcamp-devops-2023/295topics-fullstack/backend"
+frontDirectory="./bootcamp-devops-2023/295topics-fullstack/frontend"
 
-sed -i "s/\$dbHost     = \"localhost\"; /\$dbHost = \"db\";/" "bootcamp-devops-2023/app-295devops-travel/config.php"
+# Nombre del archivo Dockerfile
+dockerfile="Dockerfile"
+
+# Contenido del Dockerfile
+backContent="
+# Usa una imagen oficial de Node.js como base
+FROM node:20-alpine
+
+# Establece el directorio de trabajo en la aplicación
+WORKDIR /usr/src/app
+
+# Copia los archivos necesarios para la instalación de dependencias
+COPY package*.json ./
+
+# Instala las dependencias
+RUN npm install
+
+# Copia el resto de la aplicación
+COPY . .
+
+# Compila la aplicación TypeScript
+RUN npm run build
+
+# Expone el puerto en el que la aplicación estará escuchando
+EXPOSE 5000
+
+# Comando para iniciar la aplicación
+CMD [\"npm\", \"start\"]
+"
+frontContent="
+# Usa una imagen oficial de Node.js como base
+FROM node:20-alpine
+
+# Establece el directorio de trabajo en la aplicación
+WORKDIR /usr/src/app
+
+# Copia los archivos necesarios para la instalación de dependencias
+COPY package*.json ./
+
+# Instala las dependencias
+RUN npm install
+
+# Copia el resto de la aplicación
+COPY . .
+
+
+# Expone el puerto en el que la aplicación estará escuchando
+EXPOSE 3000
+
+# Comando para iniciar la aplicación
+CMD [\"node\", \"server.js\"]
+"
+
+# Crear el Dockerfile
+echo "$backContent" > "$directory/$backDirectory"
+echo "$frontContent" > "$directory/$frontDirectory"
+
 
 
 docker-compose up -d

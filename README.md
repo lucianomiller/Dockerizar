@@ -1,114 +1,150 @@
-# Ejercicio 2: "DevOps Travel Challenge: Elevando la LAMP a Nuevas Alturas con Docker"
+# "Despliegue la Aplicación '295topics' con Docker y Docker Compose"
 
-Si llegastes hasta aquí, es porque lograstes automatizarlo con bash todo ese proceso manual, ahora tenemos una Nueva misión, necesitamos escalar.
+### Descripción del Desafío:
 
-Tu misión es llevar la aplicación "DevOps Travel" a un entorno moderno utilizando Docker y Docker Compose. 
+El desafío se centra en la configuración de la aplicación "295topics" que consta de un frontend Node.js, un backend TypeScript y una base de datos MongoDB utilizando contenedores Docker y Docker Compose. 
 
-Esta aplicación es una LAMP (Linux, Apache, MySQL, PHP) stack que incluye PHP, Apache, y una base de datos MariaDB, gestionada a través de phpMyAdmin. 
+El objetivo es asegurar que la aplicación sea escalable, fácil de administrar y se pueda desplegar de manera eficiente.
 
-El objetivo es containerizar la aplicación, orquestar múltiples contenedores con Docker Compose, subir las imágenes resultantes a Docker Hub y automatizar todo el proceso con un script en bash.
+### Arquitectura:
 
-### Recordando un poco como funciona la aplicación
+Debes aplicar tus habilidades de DevOps para containerizar y gestionar la aplicación "295topics".
 
-- Los usuarios pueden reservar paquetes fácilmente a través de esta plataforma fácil de usar en la ubicación deseada.
-- El sitio web front-end está creado utilizando HTML CSS y JavaScript.
-- Este sitio web se hace flexible y responsivo.
-- El Backend de este sitio web está realizado utilizando base de datos php y MySQL.
-- El sitio web se ejecuta en el servidor Apache.
+Esta aplicación consta de tres componentes principales:
 
-## Arquitectura de la Aplicación
+- Frontend en Node.js y Express: Este componente sirve contenido web en el puerto 3000. Deberás crear un Dockerfile para el frontend, construir la imagen y publicarla en Docker Hub.
 
-![](./assets/12.png)
+- Backend en TypeScript: Este componente se ejecuta en el puerto 5000 y se conecta a una base de datos MongoDB. Deberás crear un Dockerfile para el backend, construir la imagen y publicarla en Docker Hub.
 
-En el diagrama de arquitectura, los usuarios inician una solicitud HTTP accediendo a la aplicación a través del navegador utilizando "localhost" o la dirección IP del servidor. El servidor, con Apache instalado, responde entregando el archivo  a los usuarios, solicitándoles que completen sus datos, incluido su nombre, correo electrónico y descripción.
+- Base de Datos MongoDB: La base de datos se iniciará a través de un contenedor de MongoDB. Además, deberás proporcionar un archivo mongo-init.js que cargue datos iniciales en la base de datos cuando se inicie el contenedor de MongoDB.
 
-Al completar el formulario, los usuarios envían los datos al servidor. Luego, Apache reenvía los datos enviados a un script PHP responsable de almacenar esta información en la base de datos MySQL. Si los datos se almacenan correctamente, MySQL comunica este éxito al script PHP, que responde con un mensaje HTML que se muestra en el navegador del usuario. Por otro lado, si hay un problema al guardar los datos, el script PHP devuelve un mensaje de error al navegador del usuario, notificándole el problema encontrado.
+![](../assets/295topics/docker-compose.png)
 
-Esta sólida arquitectura garantiza un flujo fluido de datos entre los usuarios, Apache, PHP y MySQL, proporcionando una experiencia de usuario fluida y una gestión de datos confiable.
+## Requisitos:
 
+### Frontend en Node.js y Express:
 
-## Diagrama de la Aplicación
-Incluye los accesos principales
+- Se proporciona el código fuente del frontend en Node.js y Express 
+el mismo utiliza el puerto 3000 para exponerse a Internet.
+- Crea un Dockerfile para el frontend que incluya todas las dependencias necesarias y establezca el comando de inicio.
+- Construye la imagen del frontend utilizando el Dockerfile.
+- Publica la imagen en Docker Hub.
+- Se debe tomar en cuenta que consume el endpoint del backend
+a traves de la variable `API_URI` en donde se conectara con el backend
 
-- Home Page
-- Gallery 
-- Package
-- Booking 
+Por ejemplo: `API_URI: http://topics-api:5000/api/topics`
 
-![](./assets/11.png)
+### Pruebas front
+    Se puede realizar pruebas de conexion `http://localhost:3000`
+    Recuerden siempre revisar los logs
 
-### Realizar el desafío con Docker ofrece varios beneficios significativos, entre los cuales se incluyen:
+### Backend en TypeScript:
 
-- Portabilidad
-- Aislamiento de Recursos
-- Escalabilidad
-- Consistencia
-- Eficiencia en la Implementación
-- Automatización
-- Facilita la Colaboración
-- Administración de Dependencias
+- Se Proporciona el código fuente del backend en TypeScript que utiliza el puerto 5000 y se conecta a una base de datos MongoDB.
+- Crea un Dockerfile para el backend que incluya todas las dependencias necesarias y establezca el comando de inicio.
+- Construye la imagen del backend utilizando el Dockerfile.
+- Publica la imagen en Docker Hub.
 
-### Pasos del Desafío:
+tomar en cuenta variables de entorno:
+```
+DATABASE_URL=
+DATABASE_NAME=
+HOST=
+PORT=
+```
 
-#### Containerización con Docker:
+en el archivo config.ts estan las variables de conexion a la base de datos
 
-- Crea un Dockerfile para cada componente de la aplicación (PHP, Apache, MariaDB).
+```
+export default {
+    database: {
+        url: process.env.DATABASE_URL || 'mongodb://localhost:27017',
+        name: process.env.DATABASE_NAME || 'TopicstoreDb'
+    },
+    app: {
+        host: process.env.HOST || 'localhost',
+        port: +process.env.PORT || 5000
+    }
+}
+```
+Es importante el uso de las variables de entorno
 
-Configura adecuadamente los servicios para trabajar juntos en un entorno Docker.
-
-#### Docker Compose para multicontenedores:
-
-- Crea un archivo docker-compose.yml que orqueste todos los contenedores necesarios para la aplicación DevOps Travel.
-
-Asegúrate de que los servicios se conecten entre sí y que phpMyAdmin pueda gestionar la base de datos.
-
-
-#### Subida a Docker Hub:
-
-- Crea una cuenta en Docker Hub si no la tienes.
-- Construye las imágenes Docker de tu aplicación y súbelas a Docker Hub.
-- Utiliza versiones semánticas para etiquetar tus imágenes.
-
-#### Script Bash de Automatización:
-
-- Crea un script bash llamado deploy.sh que automatice el proceso completo.
-- El script debe incluir pasos para construir cada imagen, etiquetarlas, subirlas a Docker Hub y luego ejecutar Docker Compose.
-- Ademas debes validar si la imagen que se subio a docker hub es la misma y no dejarlo avanzar
-recueden las imagenes deben ser inmutables
-- Implementa manejo de versiones semánticas en el script.
-
-#### Documentación:
-
-Proporciona documentación clara y concisa en el código, Dockerfiles, docker-compose.yml y el script bash.
-
-### Vistas
-
-![](./assets/1.png)
-![](./assets/2.png)
-![](./assets/4.png)
-![](./assets/5.png)
-![](./assets/7.png)
-![](./assets/8.png)
-![](./assets/9.png)
-![](./assets/10.png)
+### Pruebas backend
+    Se puede realizar pruebas de conexion `http://localhost:5000/api/topics`
+    recuerden revisar los logs
 
 
----
+### Base de Datos MongoDB:
 
-Documentación Complementaria:
+Se entrega archivo mongo-init.js en la [ruta](../295topics-fullstack/db/mongo-init.js)  que sirve para  precargar datos a la base de datos MongoDB.
+se debe Configura un contenedor Docker para ejecutar una instancia de MongoDB.
+Utiliza el archivo mongo-init.js para precargar datos en la base de datos.
 
-[Docker compose lamp](https://github.com/sprintcube/docker-compose-lamp)
+### Pruebas mongodb
+    Pueden usar el contenedor para conectarse y revisar la ingesta de los datos o usar directamente mongo express
+    los pasos seria siguiente:
 
-[Setting Up a LAMP Stack with Docker Compose](https://mariadb.com/kb/en/setting-up-a-lamp-stack-with-docker-compose/)
+### Se agregan registros a la base de datos
+```bash
+docker exec -it some-mongo mongosh
+
+> use TopicstoreDb
+
+> db.Topics.insertOne({Name:"Docker"})
+
+> db.Topics.insertOne({Name:"Kubernetes"})
+> show collections;
+> db.Topics.find();
+```
+
+### Mongo Express:
+
+Configura un contenedor Docker para ejecutar Mongo Express y asegura que esté conectado a la base de datos MongoDB.
+
+### Docker Compose:
+
+Crea un archivo docker-compose.yml que defina los servicios para el frontend, el backend, la base de datos MongoDB y Mongo Express.
+
+Establece las dependencias adecuadas entre los servicios para garantizar que se inicien en el orden correcto.
+
+Verifica que la aplicación se ejecuta correctamente con docker-compose up.
+Asegúrate de que el frontend puede comunicarse con el backend a través del endpoint correspondiente.
 
 
-© by RoxsRoss 2023 | All Rights Reserved
+#### Desafío Adicional:
+
+Crea un script de automatización (por ejemplo, un script Bash) para la implementación de la aplicación en un entorno de producción.
+
+### Criterios de Evaluación:
+
+- Correcta configuración de los servicios en el archivo docker-compose.yml.
+- Precarga exitosa de datos en la base de datos MongoDB utilizando mongo-init.js.
+- Correcta exposición de puertos para el frontend y el backend.
+- Conexión exitosa entre el frontend y el backend a través de Docker Compose.
+- Configuración funcional de Mongo Express para gestionar la base de datos.
+- Documentación clara y organización del código fuente.
+- Implementación exitosa en un servidor en la nube (si se realiza el desafío adicional).
+- Automatización de la implementación (si se realiza el desafío adicional).
+- Este desafío brinda la oportunidad de practicar habilidades de DevOps, Docker, Docker Compose y automatización de implementación, al tiempo que se asegura que la aplicación "295topics" se despliegue y gestione de manera efectiva.
+
+### Logros
+Este desafío proporciona una experiencia práctica en DevOps, cubriendo desde la creación de imágenes de contenedor hasta la orquestación de servicios y la gestión de bases de datos. Una vez completado, tendrás una aplicación completa que se puede implementar y escalar de manera eficiente utilizando contenedores Docker.
+
+### Resultados
+
+![](../assets/295topics/1.png)
+![](../assets/295topics/2.png)
+![](../assets/295topics/3.png)
+![](../assets/295topics/4.png)
+![](../assets/295topics/5.png)
+![](../assets/295topics/6.png)
+![](../assets/295topics/7.png)
 
 ---
 
 # Solution
 ```bash
-git clone https://github.com/lucianomiller/Dockerizar.git -b Ejercicio_1_Linux_y_automatización
+git clone https://github.com/lucianomiller/Dockerizar.git -b topics-docker
 chmod +x Dockerizar/*
 cd Dockerizar/
 ./deploy.sh
