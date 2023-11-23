@@ -96,8 +96,8 @@ CMD [\"node\", \"server.js\"]
 "
 
 # Crear el Dockerfile
-echo "$backContent" > "$directory/$backDirectory"
-echo "$frontContent" > "$directory/$frontDirectory"
+echo "$backContent" > "$backDirectory/$dockerfile"
+echo "$frontContent" > "$frontDirectory/$dockerfile"
 
 
 
